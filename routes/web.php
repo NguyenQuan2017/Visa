@@ -11,18 +11,16 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 Route::get('/login',['as'=>'login','uses'=>'Admin\DashboardController@login']);
 Route::post('/login',['as'=>'post-login','uses'=>'Admin\DashboardController@postLogin']);
 
 
-Route::group(['prefix'=>'admin','middleware'=>'authlogin'],function(){
+Route::group(['middleware'=>'authlogin'],function(){
 
 Route::get('logout',['as'=>'logout','uses'=>'Admin\DashboardController@logout']);
 
-Route::get('/dashboard',['as'=>'dashboard','uses'=>'Admin\DashboardController@dashboard']);
+Route::get('/',['as'=>'dashboard','uses'=>'Admin\DashboardController@dashboard']);
 Route::get('/add',['as'=>'add','uses'=>'Admin\DashboardController@getCard']);
 Route::post('/add',['as'=>'postadd','uses'=>'Admin\DashboardController@postCard']);
 Route::get('/edit/{id}',['as'=>'edit','uses'=>'Admin\DashboardController@getEditCard']);
