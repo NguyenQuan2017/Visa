@@ -1,6 +1,6 @@
- @extends('admin/layouts/master')
- @section('content')
- @include('admin/modal/add')
+ 
+ <?php $__env->startSection('content'); ?>
+ <?php echo $__env->make('admin/modal/add', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
  <div class="container">
                <div class="row">
                             <div class="col-xs-12">
@@ -10,8 +10,8 @@
                                 </div>
                             </div>
                         </div>
-                        @include('admin/notification/errors')
-                        @include('admin/notification/success')
+                        <?php echo $__env->make('admin/notification/errors', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                        <?php echo $__env->make('admin/notification/success', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card-box table-responsive">
@@ -32,19 +32,19 @@
 
                                         <tbody>
                                         <?php $stt=1; ?>
-                                        @foreach($visacards as $item)
+                                        <?php $__currentLoopData = $visacards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
-                                            <td>{{$stt++}}</td>
-                                            <td>{{$item->name}}</td>
-                                            <td>{{$item->id_card}}</td>
-                                            <td>{{$item->valid_date}}</td>
-                                            <td>{{$item->code}}</td>
+                                            <td><?php echo e($stt++); ?></td>
+                                            <td><?php echo e($item->name); ?></td>
+                                            <td><?php echo e($item->id_card); ?></td>
+                                            <td><?php echo e($item->valid_date); ?></td>
+                                            <td><?php echo e($item->code); ?></td>
                                             <td>
-                                            <a href="{{route('edit',$item->id)}}" class="btn btn-primary"  style="margin:5px"><i class="fa fa-pencil"> </i>&nbsp;EDIT</a>
-                                             <a href="{{route('delete',$item->id)}}" class="btn btn-danger confirm" ><i class="fa fa-trash"></i>&nbsp;DELETE</a>
+                                            <a href="<?php echo e(route('edit',$item->id)); ?>" class="btn btn-primary"  style="margin:5px"><i class="fa fa-pencil"> </i>&nbsp;EDIT</a>
+                                             <a href="<?php echo e(route('delete',$item->id)); ?>" class="btn btn-danger confirm" ><i class="fa fa-trash"></i>&nbsp;DELETE</a>
                                              </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -56,4 +56,5 @@
 </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('admin/layouts/master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

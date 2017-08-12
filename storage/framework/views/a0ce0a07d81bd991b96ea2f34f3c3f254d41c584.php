@@ -247,7 +247,7 @@
 
                             <li class="dropdown user-box">
                                 <a href="#" class="dropdown-toggle waves-effect user-link" data-toggle="dropdown" aria-expanded="true">
-                                    <h4>{{$user->name}}</h4>
+                                    <h4><?php echo e($user->name); ?></h4>
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-right arrow-dropdown-menu arrow-menu-right user-list notify-list">
@@ -255,7 +255,7 @@
                                     <li><a href="javascript:void(0)"><span class="badge badge-info pull-right">4</span>Settings</a></li>
                                     <li><a href="javascript:void(0)">Lock screen</a></li>
                                     <li class="divider"></li>
-                                    <li><a href="{{route('logout')}}">Logout</a></li>
+                                    <li><a href="<?php echo e(route('logout')); ?>">Logout</a></li>
                                 </ul>
                             </li>
 

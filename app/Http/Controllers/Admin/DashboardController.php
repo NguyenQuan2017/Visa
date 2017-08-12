@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\VisaCard;
 use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\MessageBag;
 use Validator;
 use Carbon;
 use DB;
@@ -14,7 +16,7 @@ class DashboardController extends Controller
 {
     public function dashboard(){
 
-    	$visacards=DB::table('visacards')->join('services','services.card_id','=','visacards.id')->select('*','visacards.id as card_id')->get();
+    	$visacards=VisaCard::all();
 
     	return view('admin/dashboard',compact('visacards'));
     }
@@ -76,14 +78,8 @@ class DashboardController extends Controller
     public function getEditCard($id){
 
         $visa_card=VisaCard::find($id);
-         $service=VisaCard::find($id)->services;
-         // dd($service);  
-         // foreach($service as $item){
-         //    $services=$item->id;
-         //    dd($services);
-         // }   
-
-        return view('admin/modal/edit',compact('visa_card','service'));
+      
+        return view('admin/modal/edit',compact('visa_card'));
 
     }
 
@@ -95,16 +91,14 @@ class DashboardController extends Controller
         'id_card'=>'required',
         'valid_date'=>'required',
         'code'=>'required',
-        'service'=>'required',
-        'status'=>'required'
+       
         ];
         $messages=[
             'name.required'=>'Vui lòng nhập họ tên',
             'id_card.required'=>'Vui lòng nhập id card',
             'valid_date.required'=>'Vui lòng nhập Valid Date',
             'code.required'=>'Vui lòng nhập mã code',
-            'service.required'=>'Vui lòng chọn service',
-            'status.required'=>'Vui lòng chọn trạng thái'
+          
         ];
         $validator=Validator::make($request->all(),$rules,$messages);
         if($validator->passes()){
@@ -115,17 +109,7 @@ class DashboardController extends Controller
             $visa_card->code=$request->code;
             
             $visa_card->save();
-             $card_id=$visa_card->id;
-
-            if($request->exists('service')){
-            foreach(($request->service) as $service){
-                $services=Service::where('id',$request->id_service)->first();
-                $services->card_id=$card_id;  
-                $services->name_service=$service;
-                $services->status=$request->status;
-                $services->save();
-                 }
-            }
+           
 
             return redirect()->route('dashboard')->with('messages','Cập Nhật Thành Công');
 
@@ -143,5 +127,90 @@ class DashboardController extends Controller
         $value->delete($id);  
         return redirect()->route('dashboard');
     
+    }
+    public function getListService(){
+
+        $services=Service::with('card')->get();
+        return view('admin/service/list',compact('services'));
+    }
+
+    public function getEditService($id){
+        $service=Service::find($id);
+
+        return view('admin/service/edit',compact('service'));
+    }
+    public function postEditService(Request $request){
+
+        $rules=[
+
+        'service'=>'required',
+        'status'=>'required'
+        ];
+
+        $messages=[
+        'service.required'=>"Vui lòng chọn service",
+        'status.required'=>"Vui lòng chọn status"
+        ];
+
+        $validator=Validator::make($request->all(),$rules,$messages);
+        if($validator->passes()){
+            $services=Service::where('id',$request->service_id)->first();
+            $services->name_service=$request->service;
+            $services->status=$request->status;
+            $services->save();
+            return redirect()->route('service-list')->with('messages','Cập Nhật Thành Công');
+        }
+        else{
+            return redirect()->back()->withErrors($validator);
+        }
+    }
+
+    public function deleteService($id){
+
+        $service=Service::find($id);
+        $service->delete($id);
+        return redirect()->route('service-list')->with('messages','Xoá Thành Công');
+    }
+
+    public function login(){
+
+        return view('admin/login/login');
+    }
+    public function postLogin(Request $request){
+
+        $rules=[
+        'email'=>"required|email",
+        'password'=>'required'
+        ];
+
+        $messages=[
+        'email.required'=>'Vui lòng nhập email',
+        'email.email'=>'Email không đúng định dạng',
+        'password.required'=>'Vui lòng nhập password'
+        ];
+
+        $validator=Validator::make($request->all(),$rules,$messages);
+
+        if($validator->passes()){
+
+            if(Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
+
+                return redirect()->route('dashboard');
+            }
+            else{
+                $errors = new MessageBag(['errorlogin' => 'Email hoặc mật khẩu không đúng']);
+                return redirect()->back()->withInput()->withErrors($errors);
+            }
+
+        }
+        else{
+            return redirect()->back()->withErrors($validator);
+            }
+    }
+
+     public function logout(){
+
+        Auth::logout();
+        return redirect()->route('login');
     }
 }
