@@ -11,6 +11,7 @@
                             </div>
                         </div>
                         @include('admin/notification/errors')
+                        @include('admin/notification/success')
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="card-box table-responsive">
