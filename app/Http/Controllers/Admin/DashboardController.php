@@ -127,11 +127,8 @@ class DashboardController extends Controller
                  }
             }
 
-<<<<<<< HEAD
             return redirect()->route('dashboard')->with('messages','Cập Nhật Thành Công');
-=======
-            return redirect()->route('dashboard')>with('messages','Cập Nhật Thành Công');
->>>>>>> 78d5d3951628f75c9f5d6b4be9160b6fde760fc7
+
         }
         else{
             return redirect()->back()->withErrors($validator);
