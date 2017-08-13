@@ -120,11 +120,8 @@ class DashboardController extends Controller
     }
     public function delete($id){
       
-        $services=VisaCard::find($id)->services;
-        foreach($services as $value){
-            
-        }     
-        $value->delete($id);  
+        $services=VisaCard::find($id);
+        $services->delete($id);  
         return redirect()->route('dashboard');
     
     }
