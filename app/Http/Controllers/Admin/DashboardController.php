@@ -122,7 +122,7 @@ class DashboardController extends Controller
       
         $services=VisaCard::find($id);
         $services->delete($id);  
-        return redirect()->route('dashboard');
+        return redirect()->route('dashboard')->with('messages','Xoá Thành Công');
     
     }
     public function getListService(){
